@@ -59,7 +59,7 @@
 
 <script>
     // Paste Own API Key from AccuWeather
-    const API_KEY = "YOUR_KEY_HERE";
+    const API_KEY = "RNBUPAl0up6GGVwcyeeaGmJImr3dpiTM";
 
     // Variables to monitor Temp and Units
     let currTempC = null;
@@ -95,10 +95,18 @@
             const weatherResult = await fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${API_KEY}&details=true`);
             const weatherData = await weatherResult.json();
 
+            // Clear the resultDiv and create text for failure to gather info
             if(!weatherData || weatherData.length == 0){
-                document.getElementById("weatherDetails").innerHTML = `<p class="error">Unable to obtain Weather Information for ${city}</p>`;
+                resultDiv.innerHTML = "";
+
+                // Create element to avoid HTML injection
+                const errorP = document.createElement("p");
+                errorP.className = "error";
+                errorP.textContent = "Unable to obtain Weather Information for " + city;
+                resultDiv.appendChild(errorP);                
                 return;
             }
+            
             
             // Set variables for data display
             const weather = weatherData[0];
@@ -109,19 +117,46 @@
             const uv = weather.UVIndex;
             const uvText = weather.UVIndexText;
 
+            // Get API selected location
             const state = locationData[0].AdministrativeArea.LocalizedName;
             const country = locationData[0].Country.LocalizedName;
-  
-            // Display Results
-            resultDiv.innerHTML = `
-                <h3> Current Weather for:<br> ${cityName}, ${state}, ${country}</h3>
-                <p id ="temp">Temperature: ${currTempC} °C</p>
-                <p>UV Index: ${uv} (${uvText})</p>
-                <p>Humidity: ${humidity}%</p>
-                <p>Wind: ${wind} km/h</p>
-                <p>Conditions: ${description}</p> 
-            `;
             
+            // Ensure innerHTML is empty
+            resultDiv.innerHTML = "";
+
+            // Set result through element creation to avoid malicious input
+            // Title
+            const title = document.createElement("h3");
+            title.textContent = `Current Weather for:\n ${cityName}, ${state}, ${country}`;
+            title.style.whiteSpace = "pre-line";
+            resultDiv.appendChild(title);
+
+            // Temperature
+            const tempP = document.createElement("p");
+            tempP.id = "temp";
+            tempP.textContent = `Temperature: ${currTempC} °C`;
+            resultDiv.appendChild(tempP);
+
+            // UV Index
+            const uvP = document.createElement("p");
+            uvP.textContent = `UV Index: ${uv} (${uvText})`;
+            resultDiv.appendChild(uvP);
+
+            // Humidity
+            const humidityP = document.createElement("p");
+            humidityP.textContent = `Humidity: ${humidity}%`;
+            resultDiv.appendChild(humidityP);
+
+            // Wind SPeed
+            const windP = document.createElement("p");
+            windP.textContent = `Wind: ${wind} km/h`;
+            resultDiv.appendChild(windP);
+
+            // Current Conditions
+            const descP = document.createElement("p");
+            descP.textContent = `Conditions: ${description}`;
+            resultDiv.appendChild(descP);
+
         } catch (err) {
             resultDiv.innerHTML = `<p class="error">Error fetching data.</p>`;
             console.error(err);
@@ -140,9 +175,9 @@
         // Arithmetic to set to Farenheit or Celsius
         if (showingCelsius){
             const f = (currTempC * 9/5 + 32).toFixed(1);
-            temp.innerHTML = `Temperature: ${f} °F`;
+            temp.textContent = `Temperature: ${f} °F`;
         } else {
-            temp.innerHTML = `Temperature: ${currTempC} °C`;
+            temp.textContent = `Temperature: ${currTempC} °C`;
         }
 
         showingCelsius = !showingCelsius;
@@ -151,5 +186,4 @@
 </script>
 
 </body>
-
 </html>
