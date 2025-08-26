@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+
+    <style>
+        h1{
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 25%;
+            margin: 10px 0 10px 0;
+            padding: 10px;
+            border: 2px solid #00a6ff;
+            border-radius: 8px;
+        }
+
+        /* Large Size with Padding for AccuWeather Information*/
+        #weatherDetails {
+            text-align: left;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        /* Bigger Instructions for Clarity*/
+        .inputGroup label{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Style for Error Messages*/
+        .error {
+            color: darkred;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+            </style>
+</head>
+<body>
+
+<h1>AccuWeather App</h1>
+
+<!-- Input Section for City Selection and Unit Toggle-->
+<div class="inputGroup">
+    <label for="cityInput"> Enter City:</label>
+    <input type ="text" id = "cityInput" placeholder="Enter city name"><br>
+    <button type="button" onclick="getWeather()">Search</button>
+    <button type="button" onclick="toggleTempUnit()">Toggle °F/°C</button>
+</div>
+
+<!-- Div to display weather results-->
+<div id="weatherDetails"></div>
+
+
+<script>
+    // Paste Own API Key from AccuWeather
+    const API_KEY = "RNBUPAl0up6GGVwcyeeaGmJImr3dpiTM";
+
+    // Variables to monitor Temp and Units
+    let currTempC = null;
+    let showingCelsius = true;
+
+    // Call Accuweather API and Display information
+    async function getWeather() {
+
+        // Get city and div
+        const city = document.getElementById("cityInput").value.trim();
+        const resultDiv = document.getElementById("weatherDetails");
+        
+        if (!city) {
+            resultDiv.innerHTML = `<p class="error">Input Error: Please Enter a city.</p>`;
+            return;
+        }
+
+        try {
+            
+            // Obtain City key for Accuweather
+            const locationRes = await fetch(`https://dataservice.accuweather.com/locations/v1/cities/search?apikey=${API_KEY}&q=${city}`);
+            const locationData = await locationRes.json();
+
+            if (!locationData || locationData.length == 0) {
+                document.getElementById("weatherDetails").innerHTML = `<p class="error">City Not Found</p>`;
+                return;
+            }
+
+            const locationKey = locationData[0].Key;
+            const cityName = locationData[0].LocalizedName;
+
+            // Get weather data from city key + Accuweather
+            const weatherResult = await fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${API_KEY}&details=true`);
+            const weatherData = await weatherResult.json();
+
+            if(!weatherData || weatherData.length == 0){
+                document.getElementById("weatherDetails").innerHTML = `<p class="error">Unable to obtain Weather Information for ${city}</p>`;
+                return;
+            }
+            
+            // Set variables for data display
+            const weather = weatherData[0];
+            currTempC = weather.Temperature.Metric.Value;
+            const description = weather.WeatherText;
+            const humidity = weather.RelativeHumidity;
+            const wind = weather.Wind.Speed.Metric.Value;
+            const uv = weather.UVIndex;
+            const uvText = weather.UVIndexText;
+
+            const state = locationData[0].AdministrativeArea.LocalizedName;
+            const country = locationData[0].Country.LocalizedName;
+  
+            // Display Results
+            resultDiv.innerHTML = `
+                <h3> Current Weather for:<br> ${cityName}, ${state}, ${country}</h3>
+                <p id ="temp">Temperature: ${currTempC} °C</p>
+                <p>UV Index: ${uv} (${uvText})</p>
+                <p>Humidity: ${humidity}%</p>
+                <p>Wind: ${wind} km/h</p>
+                <p>Conditions: ${description}</p> 
+            `;
+            
+        } catch (err) {
+            resultDiv.innerHTML = `<p class="error">Error fetching data.</p>`;
+            console.error(err);
+        }
+    }
+
+    // Toggle temperature unit
+    function toggleTempUnit() {
+
+        if (currTempC == null){
+            return;
+        }
+
+        const temp = document.getElementById("temp");
+
+        // Arithmetic to set to Farenheit or Celsius
+        if (showingCelsius){
+            const f = (currTempC * 9/5 + 32).toFixed(1);
+            temp.innerHTML = `Temperature: ${f} °F`;
+        } else {
+            temp.innerHTML = `Temperature: ${currTempC} °C`;
+        }
+
+        showingCelsius = !showingCelsius;
+    }
+
+</script>
+
+</body>
+</html>
