@@ -1,5 +1,5 @@
 # AccuWeather-API-App
-App using AccuWeather API to display weather for specified city. Created using JS, CSS, and HTML.
+App using AccuWeather API to display weather for a specified city. Created using JS, CSS, and HTML.
 
 ## How to Run (Visual Studio Code)
 1) Clone or download this repository to your computer.
