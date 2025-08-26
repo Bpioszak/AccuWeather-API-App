@@ -9,7 +9,7 @@ App using AccuWeather API to display weather for a specified city. Created using
 5) Utilize VSC "Live Server" extension to:
   - Right-click `index.html`
   - Select *Open with Live Server*
-This ensures the AccuWeather API calls work.
+  - This ensures the AccuWeather API calls work.
 
 ## How to Run (No Visual Studio Code)
 1) Clone or download this repository to your computer.
