@@ -22,4 +22,4 @@ App using AccuWeather API to display weather for a specified city. Created using
 
 **Important:** Using Live Server is recommended because some browsers block API requests when opening the file directly.
 
-**Also:** Each free trial key has a limited number of weather searches per day.
+**Also:** Each free trial key has a limited number of weather searches per day. API key is stored in front end rather than backend for simplicity.
