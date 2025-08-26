@@ -21,4 +21,5 @@ This ensures the AccuWeather API calls work.
   - Right-click and open with a preferred browser.
 
 **Important:** Using Live Server is recommended because some browsers block API requests when opening the file directly.
+
 **Also:** Each free trial key has a limited number of weather searches per day.
