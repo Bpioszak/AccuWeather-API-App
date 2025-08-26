@@ -3,7 +3,7 @@ App using AccuWeather API to display weather for a specified city. Created using
 
 ## How to Run (Visual Studio Code)
 1) Clone or download this repository to your computer.
-2) Open project folder using **Visual Studio Code** and open `index.html`.
+2) Open project folder using **Visual Studio Code** and select `index.html`.
 3) Replace `API_KEY` with personal AccuWeather API key (Obtained at: https://developer.accuweather.com/)
 4) Save the file
 5) Utilize VSC "Live Server" extension to:
@@ -13,7 +13,7 @@ App using AccuWeather API to display weather for a specified city. Created using
 
 ## How to Run (No Visual Studio Code)
 1) Clone or download this repository to your computer.
-2) Open the project folder and open `index.html`.
+2) Open the project folder and open `index.html` in a text editor.
 3) Replace `API_KEY` with personal AccuWeather API key (Obtained at: https://developer.accuweather.com/)
 4) Save the file.
 5) Open `index.html` in your web browser:
